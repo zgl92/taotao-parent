@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class EasyUIDataGridResult implements Serializable {
 
+
+
     private Integer total;
     private List rows;
 
