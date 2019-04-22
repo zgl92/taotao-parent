@@ -114,22 +114,52 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
         //查询 当前节点
         TbContentCategory category = tbContentCategoryMapper.selectByPrimaryKey(id);
 
+        //查询此节点的兄弟节点
+        List<TbContentCategory> parentList = tbContentCategoryMapper.getListByParentId(category.getParentId());
+
         //1.查询此节点下面的所有的子节点
         List<TbContentCategory> list = tbContentCategoryMapper.getListByParentId(category.getId());
 
 
         //2. 若此节点下面没有子节点 需要把父节点的isparent改为false
         if (list.size() == 0) {
-            category.setIsParent(false);
-            tbContentCategoryMapper.updateByPrimaryKeySelective(category);
+
             //删除
             tbContentCategoryMapper.deleteByPrimaryKey(id);
+
+            //判断是否还有兄弟节点
+            if (parentList.size() <= 1) {
+                //查询父节点 TODO
+                TbContentCategory tbContentCategory = tbContentCategoryMapper.selectByPrimaryKey(category.getParentId());
+
+                //修改父节点
+                tbContentCategory.setIsParent(false);
+
+                //更新父节点
+                tbContentCategoryMapper.updateByPrimaryKeySelective(tbContentCategory);
+            }
+
+
             return TaotaoResult.ok();
 
         } else {
 
             //删除
             tbContentCategoryMapper.deleteByPrimaryKey(id);
+
+            //判断有没有兄弟节点  没有就改false
+            //判断是否还有兄弟节点
+            if (parentList.size() <= 1) {
+                //查询父节点
+                TbContentCategory tbContentCategory = tbContentCategoryMapper.selectByPrimaryKey(category.getParentId());
+
+                //修改父节点
+                tbContentCategory.setIsParent(false);
+
+                //更新父节点
+                tbContentCategoryMapper.updateByPrimaryKeySelective(tbContentCategory);
+            }
+
 
             for (TbContentCategory tbContentCategory : list) {
 

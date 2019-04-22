@@ -24,14 +24,31 @@
         </div>
     </div>
 </div>
+
+
+//文档加载是处理以下逻辑
 <script type="text/javascript">
 $(function(){
+
+    //获取树
 	var tree = $("#contentCategoryTree");
+
+	//获取表格
 	var datagrid = $("#contentList");
+
+	//创建树
 	tree.tree({
+
+		//点击树节点时触发
 		onClick : function(node){
+
+		    //判断如果这颗树是叶子节点
 			if(tree.tree("isLeaf",node.target)){
+
+			    //加载表格中的数据 重新发送url请求加载数据
 				datagrid.datagrid('reload', {
+
+				    // 参数：分类的id
 					categoryId :node.id
 		        });
 			}
@@ -41,8 +58,14 @@ $(function(){
 var contentListToolbar = [{
     text:'新增',
     iconCls:'icon-add',
+
+	//处理点击事件时触发
     handler:function(){
+
+        //获取树中被选中的节点
     	var node = $("#contentCategoryTree").tree("getSelected");
+
+    	//表示有节点
     	if(!node || !$("#contentCategoryTree").tree("isLeaf",node.target)){
     		$.messager.alert('提示','新增内容必须选择一个内容分类!');
     		return ;
