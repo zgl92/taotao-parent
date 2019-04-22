@@ -37,6 +37,9 @@ public interface TbContentCategoryMapper {
      */
     List<TbContentCategory> getListByParentId(Long parentId);
 
-
+    /**
+     *  查询兄弟节点
+     */
+    List<TbContentCategory> selectByAll(Long id);
 
 }

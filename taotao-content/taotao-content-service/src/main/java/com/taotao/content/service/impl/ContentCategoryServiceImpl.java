@@ -129,14 +129,15 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
 
             //判断是否还有兄弟节点
             if (parentList.size() <= 1) {
-                //查询父节点 TODO
+                //查询父节点
                 TbContentCategory tbContentCategory = tbContentCategoryMapper.selectByPrimaryKey(category.getParentId());
 
-                //修改父节点
-                tbContentCategory.setIsParent(false);
-
-                //更新父节点
-                tbContentCategoryMapper.updateByPrimaryKeySelective(tbContentCategory);
+                if (tbContentCategory != null) {
+                    //修改父节点
+                    tbContentCategory.setIsParent(false);
+                    //更新父节点
+                    tbContentCategoryMapper.updateByPrimaryKeySelective(tbContentCategory);
+                }
             }
 
 
@@ -144,21 +145,23 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
 
         } else {
 
-            //删除
-            tbContentCategoryMapper.deleteByPrimaryKey(id);
-
             //判断有没有兄弟节点  没有就改false
             //判断是否还有兄弟节点
             if (parentList.size() <= 1) {
                 //查询父节点
                 TbContentCategory tbContentCategory = tbContentCategoryMapper.selectByPrimaryKey(category.getParentId());
 
-                //修改父节点
-                tbContentCategory.setIsParent(false);
+                if (tbContentCategory != null) {
+                    //修改父节点
+                    tbContentCategory.setIsParent(false);
+                    //更新父节点
+                    tbContentCategoryMapper.updateByPrimaryKeySelective(tbContentCategory);
+                }
 
-                //更新父节点
-                tbContentCategoryMapper.updateByPrimaryKeySelective(tbContentCategory);
             }
+
+            //删除
+            tbContentCategoryMapper.deleteByPrimaryKey(id);
 
 
             for (TbContentCategory tbContentCategory : list) {
