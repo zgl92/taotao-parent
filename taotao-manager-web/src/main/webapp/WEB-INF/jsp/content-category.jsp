@@ -9,20 +9,36 @@
     <div data-options="iconCls:'icon-remove',name:'delete'">删除</div>
 </div>
 <script type="text/javascript">
+
+  //文档加载处理的逻辑
 $(function(){
+
+    // 在#contentCategory所在的标签中创建了一颗树
 	$("#contentCategory").tree({
 		url : '/content/category/list',
 		animate: true,
 		method : "GET",
-		onContextMenu: function(e,node){
+
+        //右击鼠标触发
+        onContextMenu: function(e,node){
+
+		    //关闭原来的鼠标默认事件
             e.preventDefault();
+
+            //选中 右击鼠标的节点
             $(this).tree('select',node.target);
+
+            //展示我们的菜单栏
             $('#contentCategoryMenu').menu('show',{
-                left: e.pageX,
-                top: e.pageY
+                left: e.pageX, //鼠标的位置显示
+                top: e.pageY   //鼠标的位置显示
             });
         },
+
+        //在编辑之后触发
         onAfterEdit : function(node){
+
+		    //获取树本身
         	var _tree = $(this);
         	if(node.id == 0){
         		// 新增节点
@@ -42,16 +58,27 @@ $(function(){
         }
 	});
 });
+
+//处理菜单的点击事件
 function menuHandler(item){
-	var tree = $("#contentCategory");
-	var node = tree.tree("getSelected");
+
+    //获取树节点
+    var tree = $("#contentCategory");
+
+    //获取被选中的节点 就是右击鼠标所在的节点
+    var node = tree.tree("getSelected");
+
+
+    //判断选择的是添加还是重命名还是删除
 	if(item.name === "add"){
 		tree.tree('append', {
             parent: (node?node.target:null),
+
+            //数据
             data: [{
                 text: '新建分类',
                 id : 0,
-                parentId : node.id
+                parentId : node.id  //新建节点的父节点的id
             }]
         }); 
 		var _node = tree.tree('find',0);//根节点
@@ -60,9 +87,11 @@ function menuHandler(item){
 		tree.tree('beginEdit',node.target);
 	}else if(item.name === "delete"){
 		$.messager.confirm('确认','确定删除名为 '+node.text+' 的分类吗？',function(r){
-			if(r){
+			if(r){ //如果是true 表示要执行以下逻辑
 				$.post("/content/category/delete/",{id:node.id},function(){
-					tree.tree("remove",node.target);
+
+				    //后台删除成功后，删除前端的节点
+				    tree.tree("remove",node.target);
 				});	
 			}
 		});

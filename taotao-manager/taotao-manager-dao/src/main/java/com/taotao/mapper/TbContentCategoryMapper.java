@@ -28,4 +28,14 @@ public interface TbContentCategoryMapper {
     int updateByPrimaryKeySelective(TbContentCategory record);
 
     int updateByPrimaryKey(TbContentCategory record);
+
+    /**
+     * getListByParentId
+     * 查询此节点下面的所有的子节点
+     * @param parentId
+     * @return
+     */
+    List<TbContentCategory> getListByParentId(Long parentId);
+
+
 }
